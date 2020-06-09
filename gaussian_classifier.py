@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from tensorflow.keras.utils import to_categorical
 
 
@@ -37,3 +38,20 @@ class SegmentaionMap:
                 annot_arr[i, :, :, :])
 
         return densities_list
+
+    def imshow_prediciton(self):
+        densities_list = self.get_density()
+
+        plt.figure(figsize=(15, 10))
+        j = 0
+        num_of_images = self.annot_arr.shape[0] + 1
+        for i in range(self.annot_arr.shape[0]):
+            plt.subplot(1 * num_of_images, 2, j+1)
+            plt.imshow(self.annot_arr[i, :, :])
+            # print(densities_list[i, 1:] * 100)
+
+            plt.subplot(1 * num_of_images, 2, j+2)
+            plt.plot(densities_list[i, 1:] * 100)
+            plt.xlabel('Class')
+
+            j = j + 2

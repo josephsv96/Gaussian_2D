@@ -2,5 +2,6 @@
 __pycache__/
 
 /data
+/data_old
 /concept
 .ipynb_checkpoints
