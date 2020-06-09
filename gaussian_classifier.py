@@ -45,13 +45,51 @@ class SegmentaionMap:
         plt.figure(figsize=(15, 10))
         j = 0
         num_of_images = self.annot_arr.shape[0] + 1
+        if num_of_images > 10:
+            num_of_images = 10
         for i in range(self.annot_arr.shape[0]):
             plt.subplot(1 * num_of_images, 2, j+1)
             plt.imshow(self.annot_arr[i, :, :])
             # print(densities_list[i, 1:] * 100)
 
             plt.subplot(1 * num_of_images, 2, j+2)
-            plt.plot(densities_list[i, 1:] * 100)
+            plt.plot(densities_list[i, :] * 100)
             plt.xlabel('Class')
 
             j = j + 2
+
+    def class_dist(self):
+        densities_list = self.get_density()
+        num_classes = densities_list.shape[-1]
+        num_annots = densities_list.shape[0]
+        low_threshold = 0.15
+        # up_threshold = 0.45
+        # Average of prediction over all classes
+        class_dist = np.zeros([num_classes, num_annots, num_classes])
+        for i in range(num_annots):
+            # print(densities_list[i, :])
+            class_index = np.where(densities_list[i, 1:] > low_threshold)[0][0]
+
+            class_dist[class_index, i, 1:] = densities_list[i, 1:]
+
+        class_dist = np.sum(class_dist, axis=1)
+
+        return class_dist
+
+    def show_class_dist(self):
+        densities_list = self.class_dist()
+        num_classes = densities_list.shape[0]
+        class_colors = ['black', '#259c14', '#4c87c6',
+                        '#737373', '#cbec24', '#f0441a', '#0d218f']
+        plt.figure(figsize=(12, 24))
+
+        for i in range(num_classes):
+            plt.subplot(1 * num_classes, 1, i+1)
+            plt.plot(densities_list[i, :] * 100, color=class_colors[i])
+            # print(densities_list[i, 1:] * 100)
+            plt.legend(['Class_' + str(i)])
+            plt.xlabel('Classes')
+            plt.ylabel('Prediciton')
+            plt.ylim(0)
+
+        return None
