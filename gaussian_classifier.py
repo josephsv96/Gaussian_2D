@@ -58,11 +58,11 @@ class SegmentaionMap:
 
             j = j + 2
 
-    def class_dist(self):
+    def class_dist(self, low_threshold=0.15):
         densities_list = self.get_density()
         num_classes = densities_list.shape[-1]
         num_annots = densities_list.shape[0]
-        low_threshold = 0.15
+
         # up_threshold = 0.45
         # Average of prediction over all classes
         class_dist = np.zeros([num_classes, num_annots, num_classes])
@@ -92,4 +92,30 @@ class SegmentaionMap:
             plt.ylabel('Prediciton')
             plt.ylim(0)
 
-        return None
+    def batch_dist(self, low_threshold=0.15):
+        densities_list = self.get_density()
+        batch_dist = densities_list.transpose()
+
+        return batch_dist
+
+    def show_batch_dist(self):
+        batch_densities_arr = self.batch_dist()
+        num_classes = batch_densities_arr.shape[0]
+        num_annots = batch_densities_arr.shape[1]
+        class_colors = ['black', '#259c14', '#4c87c6',
+                        '#737373', '#cbec24', '#f0441a', '#0d218f']
+
+        print(num_annots)
+        print(num_classes)
+
+        plt.figure(figsize=(12, 24))
+        for i in range(num_classes):
+            plt.subplot(1 * num_classes, 1, i+1)
+            plt.scatter(x=batch_densities_arr[i, :],
+                        y=np.zeros(num_annots),
+                        color=class_colors[i])
+            # print(densities_list[i, 1:] * 100)
+            plt.legend(['Class_' + str(i)])
+            plt.xlabel('Classes')
+            plt.ylabel('Prediciton')
+            plt.ylim(0)
