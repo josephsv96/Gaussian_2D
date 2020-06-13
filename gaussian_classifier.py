@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.utils import to_categorical
+from scipy.stats import norm
 
 
 class SegmentaionMap:
@@ -95,27 +96,51 @@ class SegmentaionMap:
     def batch_dist(self, low_threshold=0.15):
         densities_list = self.get_density()
         batch_dist = densities_list.transpose()
+        num_classes = densities_list.shape[1]
+        new_dist = []
 
-        return batch_dist
+        for i in range(num_classes):
+            class_index = np.where(batch_dist[i, :] > low_threshold)[0]
+            new_dist.append(densities_list[class_index, :])
+
+        return new_dist, batch_dist
+
+    # def get_norm_values(self, x_values):
+    #     mean = np.mean(x_values)
+    #     std = np.std(x_values)
+    #     y_values = norm(mean, std).pdf(x_values)
+
+    #     return y_values
 
     def show_batch_dist(self):
-        batch_densities_arr = self.batch_dist()
-        num_classes = batch_densities_arr.shape[0]
-        num_annots = batch_densities_arr.shape[1]
+        new_dist, _ = self.batch_dist()
+        num_classes = len(new_dist)
         class_colors = ['black', '#259c14', '#4c87c6',
                         '#737373', '#cbec24', '#f0441a', '#0d218f']
 
-        print(num_annots)
-        print(num_classes)
+        # plt.figure(figsize=(10, 20))
+        for j in range(num_classes):
+            plt.figure(figsize=(10, 20))
+            plt.subplot(num_classes, 1, j+1)
+            # j = 4
 
-        plt.figure(figsize=(12, 24))
-        for i in range(num_classes):
-            plt.subplot(1 * num_classes, 1, i+1)
-            plt.scatter(x=batch_densities_arr[i, :],
-                        y=np.zeros(num_annots),
-                        color=class_colors[i])
-            # print(densities_list[i, 1:] * 100)
-            plt.legend(['Class_' + str(i)])
+            sample_x = new_dist[j]
+            sample_y = np.zeros(new_dist[j].shape)
+
+            for i in range(num_classes):
+                plt.scatter(sample_x[:, i], sample_y[:, i],
+                            color=class_colors[i])
+
+                x_values = np.sort(sample_x[:, i])
+                mean = np.mean(x_values)
+                std = np.std(x_values)
+
+                y_values = norm(mean, std).pdf(np.sort(sample_x[:, i]))
+
+                plt.plot(x_values, y_values, color=class_colors[i])
+
+            plt.legend(['Class_' + str(j)])
             plt.xlabel('Classes')
             plt.ylabel('Prediciton')
             plt.ylim(0)
+            plt.show()
