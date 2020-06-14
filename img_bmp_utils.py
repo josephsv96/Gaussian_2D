@@ -51,7 +51,7 @@ def read_cmp(segmap_files, width, height):
         # segmap = segmap.reshape([width, height])
 
         label_set[i, :, :] = segmap
-        print("Saving:", i+1, '/', segmap_num)
+        print("Processing:", i+1, '/', segmap_num)
 
     return label_set
 
@@ -77,6 +77,19 @@ def save_npy(CWD_PATH, image_arr, label_arr):
     np.save(OUTPUT_PATH / 'dataset_labels', label_arr)
 
 
+def save_cmp_npy(CWD_PATH, label_arr):
+    # Destination directory of dataset
+    OUTPUT_PATH = CWD_PATH / 'dataset'
+    if OUTPUT_PATH.is_dir():
+        print("Dataset folder exists; overwriting existing files in folder")
+    else:
+        print("Dataset folder created")
+        OUTPUT_PATH.mkdir()
+
+    # Saving as .npy files
+    np.save(OUTPUT_PATH / 'dataset_labels', label_arr)
+
+
 def read_npy(CWD_PATH):
     # Testing the output files
     image_arr = np.load(CWD_PATH/'dataset_images.npy')
@@ -86,6 +99,15 @@ def read_npy(CWD_PATH):
     print("Annotation array:", annot_arr.shape)
 
     return image_arr, annot_arr
+
+
+def read_cmp(CWD_PATH):
+    # Testing the output files
+    annot_arr = np.load(CWD_PATH/'dataset_labels.npy')
+
+    print("Annotation array:", annot_arr.shape)
+
+    return annot_arr
 
 
 def main():
