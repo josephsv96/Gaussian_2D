@@ -4,4 +4,8 @@ __pycache__/
 /data
 /data_old
 /concept
+/cv2_remove_distortion/output
+/cv2_remove_distortion/samples
+/cv2_remove_distortion/sample
+/cv2_remove_distortion/sample_undist
 .ipynb_checkpoints
