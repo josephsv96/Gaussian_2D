@@ -8,4 +8,6 @@ __pycache__/
 /cv2_remove_distortion/samples
 /cv2_remove_distortion/sample
 /cv2_remove_distortion/sample_undist
+testing.ipynb
+testing_cmap_splitter.ipynb
 .ipynb_checkpoints
