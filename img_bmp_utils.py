@@ -101,7 +101,7 @@ def read_npy(CWD_PATH):
     return image_arr, annot_arr
 
 
-def read_cmp(CWD_PATH):
+def read_cmp_npy(CWD_PATH):
     # Testing the output files
     annot_arr = np.load(CWD_PATH/'dataset_labels.npy')
 

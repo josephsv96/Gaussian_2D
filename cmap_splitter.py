@@ -7,9 +7,13 @@ class CmapSplitter:
     def __init__(self, annot_arr):
         self.annot_arr = annot_arr
 
-    def split_to_4(self, annot_arr, width, height, x_offset, y_offset):
-        split_annot_arr_shape = (annot_arr.shape[0]*4, width, height)
+    def get_box_values(self):
+
+    def split_to_4(self, width, height, x_offset, y_offset):
+        split_annot_arr_shape = (self.annot_arr.shape[0]*4, width, height)
         split_annot_arr = np.zeros(split_annot_arr_shape)
+
+
         return split_annot_arr
 
 
