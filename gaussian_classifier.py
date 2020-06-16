@@ -147,7 +147,8 @@ class SegmentaionMap:
                     sample_x[:, j], plot_type)
 
                 if mean != 0:
-                    legends.append('Class_' + str(j))
+                    legends.append('Class_' + str(j) +
+                                   ", Mean: " + str(round(mean, 2)))
                     if plot_type == 'a':
                         plt.scatter(sample_x[:, j], sample_y[:, j],
                                     color=class_colors[j])
